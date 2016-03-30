@@ -6,6 +6,7 @@ import com.devopsbuddy.backend.persistence.domain.backend.UserRole;
 import com.devopsbuddy.backend.persistence.repositories.PlanRepository;
 import com.devopsbuddy.backend.persistence.repositories.RoleRepository;
 import com.devopsbuddy.backend.persistence.repositories.UserRepository;
+import com.devopsbuddy.backend.persistence.repositories.UserRoleRepository;
 import com.devopsbuddy.enums.PlansEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserRoleRepository userRoleRepository;
+
     @Transactional
     public User createUser(User user, PlansEnum plansEnum, Set<UserRole> userRoles) {
 
@@ -38,14 +42,12 @@ public class UserService {
             plan = planRepository.save(plan);
         }
 
-        user.setPlan(plan);
-
         for (UserRole ur : userRoles) {
             roleRepository.save(ur.getRole());
         }
 
+        user.setPlan(plan);
         user.getUserRoles().addAll(userRoles);
-
         user = userRepository.save(user);
 
         return user;
