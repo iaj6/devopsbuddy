@@ -47,7 +47,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             "/contact/**",
             "/error/**/*",
             "/console/**",
-            "/forgotmypassword"
+            "/forgotmypassword",
+            "/changeuserpassword"
     };
 
     @Override
