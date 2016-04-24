@@ -60,12 +60,10 @@ public class SignupController {
 
     @RequestMapping(value = SIGNUP_URL_MAPPING, method = RequestMethod.GET)
     public String signupGet(@RequestParam("planId") int planId, ModelMap model) {
-        if (planId == PlansEnum.BASIC.getId()) {
-            model.addAttribute(PAYLOAD_MODEL_KEY_NAME, new BasicAccountPayload());
-        } else if (planId == PlansEnum.PRO.getId()) {
-            model.addAttribute(PAYLOAD_MODEL_KEY_NAME, new ProAccountPayload());
+        if (planId != PlansEnum.BASIC.getId() && planId != PlansEnum.PRO.getId()) {
+            throw new IllegalArgumentException("Plan id is not valid");
         }
-
+        model.addAttribute(PAYLOAD_MODEL_KEY_NAME, new ProAccountPayload());
         return SUBSCRIPTION_VIEW_NAME;
     }
 
