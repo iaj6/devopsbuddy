@@ -1,6 +1,7 @@
 package com.devopsbuddy.web.domain.frontend;
 
 /**
+ * A Basic account with credit card information
  * Created by tedonema on 24/04/2016.
  */
 public class ProAccountPayload extends BasicAccountPayload {
