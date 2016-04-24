@@ -10,6 +10,7 @@ import com.devopsbuddy.enums.PlansEnum;
 import com.devopsbuddy.enums.RolesEnum;
 import com.devopsbuddy.utils.UserUtils;
 import com.devopsbuddy.web.domain.frontend.BasicAccountPayload;
+import com.devopsbuddy.web.domain.frontend.ProAccountPayload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,14 +60,25 @@ public class SignupController {
 
     @RequestMapping(value = SIGNUP_URL_MAPPING, method = RequestMethod.GET)
     public String signupGet(@RequestParam("planId") int planId, ModelMap model) {
-        model.addAttribute(PAYLOAD_MODEL_KEY_NAME, new BasicAccountPayload());
+        if (planId == PlansEnum.BASIC.getId()) {
+            model.addAttribute(PAYLOAD_MODEL_KEY_NAME, new BasicAccountPayload());
+        } else if (planId == PlansEnum.PRO.getId()) {
+            model.addAttribute(PAYLOAD_MODEL_KEY_NAME, new ProAccountPayload());
+        }
+
         return SUBSCRIPTION_VIEW_NAME;
     }
 
     @RequestMapping(value = SIGNUP_URL_MAPPING, method = RequestMethod.POST)
     public String signUpPost(@RequestParam(name = "planId", required = true) int planId,
-                             @ModelAttribute(PAYLOAD_MODEL_KEY_NAME) @Valid BasicAccountPayload payload, ModelMap model) throws
+                             @ModelAttribute(PAYLOAD_MODEL_KEY_NAME) @Valid ProAccountPayload payload, ModelMap model) throws
             IOException {
+
+        if (planId != PlansEnum.BASIC.getId() && planId != PlansEnum.PRO.getId()) {
+            model.addAttribute(SIGNED_UP_MESSAGE_KEY, "false");
+            model.addAttribute(ERROR_MESSAGE_KEY, "Plan id does not exist");
+            return SUBSCRIPTION_VIEW_NAME;
+        }
 
         this.checkForDuplicates(payload, model);
 
@@ -103,7 +115,14 @@ public class SignupController {
 
         // By default users get the BASIC ROLE
         Set<UserRole> roles = new HashSet<>();
-        roles.add(new UserRole(user, new Role(RolesEnum.BASIC)));
+        if (planId == PlansEnum.BASIC.getId()) {
+            roles.add(new UserRole(user, new Role(RolesEnum.BASIC)));
+        } else {
+            roles.add(new UserRole(user, new Role(RolesEnum.PRO)));
+            LOG.debug(payload.toString());
+        }
+
+
 
         User registeredUser = userService.createUser(user, PlansEnum.BASIC, roles);
 
