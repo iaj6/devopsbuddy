@@ -42,14 +42,4 @@ public class ProAccountPayload extends BasicAccountPayload {
         this.cardYear = cardYear;
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder(super.toString() + "ProAccountPayload{");
-        sb.append("cardNumber='").append(cardNumber).append('\'');
-        sb.append(", cardCode='").append(cardCode).append('\'');
-        sb.append(", cardMonth='").append(cardMonth).append('\'');
-        sb.append(", cardYear='").append(cardYear).append('\'');
-        sb.append('}');
-        return sb.toString();
-    }
 }
