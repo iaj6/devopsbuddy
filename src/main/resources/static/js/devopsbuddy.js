@@ -198,10 +198,10 @@ function main() {
                 description: {
                     validators: {
                         stringLength: {
-                            message: 'Post content must be less than 500 characters',
+                            message: 'Post content must be less than 300 characters',
                             min: 0,
                             max: function (value, validator, $field) {
-                                return 500 - (value.match(/\r/g) || []).length;
+                                return 300 - (value.match(/\r/g) || []).length;
                             }
                         }
                     }
@@ -212,7 +212,7 @@ function main() {
                             message: 'The phone number is required'
                         },
                         phone: {
-                            country: 'countrySelectBox',
+                            country: 'country',
                             message: 'The value is not valid %s phone number'
                         }
                     }
@@ -220,7 +220,7 @@ function main() {
             }
         })
         // Revalidate phone number when changing the country
-        .on('change', '[name="countrySelectBox"]', function(e) {
+        .on('change', '[name="country"]', function(e) {
             $('#signupForm').formValidation('revalidateField', 'phoneNumber');
         });
 
