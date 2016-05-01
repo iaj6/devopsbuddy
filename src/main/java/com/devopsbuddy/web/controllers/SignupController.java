@@ -91,14 +91,14 @@ public class SignupController {
         if (model.containsKey(DUPLICATED_USERNAME_KEY)) {
             LOG.warn("The username already exists. Displaying error to the user");
             model.addAttribute(SIGNED_UP_MESSAGE_KEY, "false");
-            errorMessages.add("Username already exist.");
+            errorMessages.add("Username already exist");
             duplicates = true;
         }
 
         if (model.containsKey(DUPLICATED_EMAIL_KEY)) {
             LOG.warn("The email already exists. Displaying error to the user");
             model.addAttribute(SIGNED_UP_MESSAGE_KEY, "false");
-            errorMessages.add("Email already exist.");
+            errorMessages.add("Email already exist");
             duplicates = true;
         }
 
