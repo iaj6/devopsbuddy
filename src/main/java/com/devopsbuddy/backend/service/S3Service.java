@@ -46,7 +46,7 @@ public class S3Service {
      * @param bucketName The bucket name
      * @return the root URL where the bucket name is located.
      */
-    public String ensureBucketExists(String bucketName) {
+    private String ensureBucketExists(String bucketName) {
 
         String bucketUrl = null;
 
@@ -73,7 +73,7 @@ public class S3Service {
      *
      * @throws IllegalArgumentException If the resource file does not exist
      */
-    public String storeProfileImage(File resource, String username) {
+    private String storeProfileImage(File resource, String username) {
 
         String resourceUrl = null;
 
@@ -154,14 +154,5 @@ public class S3Service {
 
     }
 
-    /**
-     * Returns the URL of the resource in the given bucket
-     * @param bucketName The bucket containing the resource
-     * @param fileKey The key identifying the resource
-     * @return the URL of the resource in the given bucket
-     */
-    public String retrieveResource(String bucketName, String fileKey) {
-        return s3Client.getResourceUrl(bucketName, fileKey);
 
-    }
 }
