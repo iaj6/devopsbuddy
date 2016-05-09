@@ -4,8 +4,6 @@ import com.devopsbuddy.DevopsbuddyApplication;
 import com.devopsbuddy.backend.service.StripeService;
 import com.stripe.Stripe;
 import com.stripe.model.Customer;
-import com.stripe.model.Plan;
-import com.stripe.model.PlanCollection;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,25 +46,13 @@ public class StripeIntegrationTest {
     }
 
     @Test
-    public void testRetrieveAllPlans() throws Exception {
-
-        Map<String, Object> planParams = new HashMap<String, Object>();
-        planParams.put("limit", 3);
-
-        PlanCollection planCollection = Plan.list(planParams);
-        planCollection.autoPagingIterable().forEach(p -> LOG.info("Plan: {}", p.getId()));
-        Assert.assertTrue(planCollection.getData().size() == 1);
-
-    }
-
-    @Test
     public void createStripeCustomer() throws Exception {
 
         Map<String, Object> tokenParams = new HashMap<String, Object>();
         Map<String, Object> cardParams = new HashMap<String, Object>();
         cardParams.put("number", "4242424242424242");
         cardParams.put("exp_month", 1);
-        cardParams.put("exp_year", 2017);
+        cardParams.put("exp_year", LocalDate.now(Clock.systemUTC()).getYear() + 1);
         cardParams.put("cvc", "314");
         tokenParams.put("card", cardParams);
 
