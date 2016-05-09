@@ -2,6 +2,7 @@ package com.devopsbuddy.test.integration;
 
 import com.devopsbuddy.DevopsbuddyApplication;
 import com.devopsbuddy.backend.service.StripeService;
+import com.devopsbuddy.enums.PlansEnum;
 import com.stripe.Stripe;
 import com.stripe.model.Customer;
 import org.junit.Assert;
@@ -64,6 +65,7 @@ public class StripeIntegrationTest {
 
         Map<String, Object> customerParams = new HashMap<String, Object>();
         customerParams.put("description", "Customer for test@example.com");
+        customerParams.put("plan", PlansEnum.PRO.getId());
 
         String stripeCustomerId = stripeService.createCustomer(tokenParams, customerParams);
         assertThat(stripeCustomerId, is(notNullValue()));
