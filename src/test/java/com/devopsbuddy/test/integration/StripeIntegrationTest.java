@@ -33,6 +33,12 @@ public class StripeIntegrationTest {
     /** The application logger. */
     private static final Logger LOG = LoggerFactory.getLogger(StripeIntegrationTest.class);
 
+    public static final String TEST_CC_NUMBER = "4242424242424242";
+
+    public static final int TEST_CC_EXP_MONTH = 1;
+
+    public static final String TEST_CC_CVC_NBR = "314";
+
     @Autowired
     private StripeService stripeService;
 
@@ -50,10 +56,10 @@ public class StripeIntegrationTest {
 
         Map<String, Object> tokenParams = new HashMap<String, Object>();
         Map<String, Object> cardParams = new HashMap<String, Object>();
-        cardParams.put("number", "4242424242424242");
-        cardParams.put("exp_month", 1);
+        cardParams.put("number", TEST_CC_NUMBER);
+        cardParams.put("exp_month", TEST_CC_EXP_MONTH);
         cardParams.put("exp_year", LocalDate.now(Clock.systemUTC()).getYear() + 1);
-        cardParams.put("cvc", "314");
+        cardParams.put("cvc", TEST_CC_CVC_NBR);
         tokenParams.put("card", cardParams);
 
         Map<String, Object> customerParams = new HashMap<String, Object>();
