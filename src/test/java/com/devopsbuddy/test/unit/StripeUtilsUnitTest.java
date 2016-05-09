@@ -1,12 +1,12 @@
 package com.devopsbuddy.test.unit;
 
+import com.devopsbuddy.test.integration.StripeIntegrationTest;
 import com.devopsbuddy.utils.StripeUtils;
 import com.devopsbuddy.web.domain.frontend.ProAccountPayload;
-import org.junit.Before;
 import org.junit.Test;
-import uk.co.jemos.podam.api.PodamFactory;
-import uk.co.jemos.podam.api.PodamFactoryImpl;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,24 +17,17 @@ import static org.hamcrest.core.Is.is;
  */
 public class StripeUtilsUnitTest {
 
-    private PodamFactory podam;
-
-    @Before
-    public void init() {
-        podam = new PodamFactoryImpl();
-    }
-
     @Test
     public void createStripeTokenParamsFromUserPayload() {
 
-        ProAccountPayload payload = podam.manufacturePojo(ProAccountPayload.class);
-        String cardNumber = "4242424242424242";
+        ProAccountPayload payload = new ProAccountPayload();
+        String cardNumber = StripeIntegrationTest.TEST_CC_NUMBER;
         payload.setCardNumber(cardNumber);
-        String cardCode = "314";
+        String cardCode = StripeIntegrationTest.TEST_CC_CVC_NBR;
         payload.setCardCode(cardCode);
-        String cardMonth = "1";
+        String cardMonth = String.valueOf(StripeIntegrationTest.TEST_CC_EXP_MONTH);
         payload.setCardMonth(cardMonth);
-        String cardYear = "2017";
+        String cardYear = String.valueOf(LocalDate.now(Clock.systemUTC()).getYear() + 1);
         payload.setCardYear(cardYear);
 
         Map<String, Object> tokenParams = StripeUtils.extractTokenParamsFromSignupPayload(payload);
