@@ -10,6 +10,7 @@ import com.devopsbuddy.backend.service.StripeService;
 import com.devopsbuddy.backend.service.UserService;
 import com.devopsbuddy.enums.PlansEnum;
 import com.devopsbuddy.enums.RolesEnum;
+import com.devopsbuddy.exceptions.StripeException;
 import com.devopsbuddy.utils.StripeUtils;
 import com.devopsbuddy.utils.UserUtils;
 import com.devopsbuddy.web.domain.frontend.BasicAccountPayload;
@@ -23,14 +24,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -197,6 +199,19 @@ public class    SignupController {
         model.addAttribute(SIGNED_UP_MESSAGE_KEY, "true");
 
         return SUBSCRIPTION_VIEW_NAME;
+    }
+
+    @ExceptionHandler(StripeException.class)
+    public ModelAndView stripeError(HttpServletRequest request, Exception exception) {
+
+        LOG.error("Request {} raised exception {}", request.getRequestURL(), exception);
+
+        ModelAndView mav = new ModelAndView();
+        mav.addObject("exception", exception);
+        mav.addObject("url", request.getRequestURL());
+        mav.setViewName("error/genericError");
+        mav.addObject("timestamp", LocalDate.now(Clock.systemUTC()));
+        return mav;
     }
 
 
