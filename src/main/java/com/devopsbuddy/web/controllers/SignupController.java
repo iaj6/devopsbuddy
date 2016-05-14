@@ -10,6 +10,7 @@ import com.devopsbuddy.backend.service.StripeService;
 import com.devopsbuddy.backend.service.UserService;
 import com.devopsbuddy.enums.PlansEnum;
 import com.devopsbuddy.enums.RolesEnum;
+import com.devopsbuddy.exceptions.S3Exception;
 import com.devopsbuddy.exceptions.StripeException;
 import com.devopsbuddy.utils.StripeUtils;
 import com.devopsbuddy.utils.UserUtils;
@@ -201,8 +202,8 @@ public class    SignupController {
         return SUBSCRIPTION_VIEW_NAME;
     }
 
-    @ExceptionHandler(StripeException.class)
-    public ModelAndView stripeError(HttpServletRequest request, Exception exception) {
+    @ExceptionHandler({StripeException.class, S3Exception.class})
+    public ModelAndView proSubscriptionExceptions(HttpServletRequest request, Exception exception) {
 
         LOG.error("Request {} raised exception {}", request.getRequestURL(), exception);
 

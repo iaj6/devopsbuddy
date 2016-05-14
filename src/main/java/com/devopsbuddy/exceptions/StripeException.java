@@ -5,11 +5,6 @@ package com.devopsbuddy.exceptions;
  */
 public class StripeException extends RuntimeException {
 
-
-    public StripeException() {
-        super();
-    }
-
     public StripeException(Throwable e) {
         super(e);
     }

@@ -6,6 +6,7 @@ import com.amazonaws.services.s3.model.AccessControlList;
 import com.amazonaws.services.s3.model.GroupGrantee;
 import com.amazonaws.services.s3.model.Permission;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.devopsbuddy.exceptions.S3Exception;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,42 +49,49 @@ public class S3Service {
      * @param uploadedFile The multipart file uploaed by the user
      * @param username The username for which to upload this file
      * @return The URL of the uploaded image
+     * @throws S3Exception If an exception occurred while processing S3 activities
      */
-    public String storeProfileImage(MultipartFile uploadedFile, String username) throws
-            IOException {
+    public String storeProfileImage(MultipartFile uploadedFile, String username)  {
 
         String profileImageUrl = null;
 
-        if (uploadedFile != null && !uploadedFile.isEmpty()) {
-            byte[] bytes = uploadedFile.getBytes();
+        try {
 
-            // The root of our temporary assets. Will create if it doesn't exist
-            File tmpImageStoredFolder = new File(tempImageStore + File.separatorChar + username);
-            if (!tmpImageStoredFolder.exists()) {
-                LOG.info("Creating the temporary root for the S3 assets");
-                tmpImageStoredFolder.mkdirs();
+            if (uploadedFile != null && !uploadedFile.isEmpty()) {
+                byte[] bytes = uploadedFile.getBytes();
+
+                // The root of our temporary assets. Will create if it doesn't exist
+                File tmpImageStoredFolder = new File(tempImageStore + File.separatorChar + username);
+                if (!tmpImageStoredFolder.exists()) {
+                    LOG.info("Creating the temporary root for the S3 assets");
+                    tmpImageStoredFolder.mkdirs();
+                }
+
+                // The temporary file where the profile image will be stored
+                File tmpProfileImageFile = new File(tmpImageStoredFolder.getAbsolutePath()
+                        + File.separatorChar
+                        + PROFILE_PICTURE_FILE_NAME
+                        + "."
+                        + FilenameUtils.getExtension(uploadedFile.getOriginalFilename()));
+
+                LOG.info("Temporary file will be saved to {}", tmpProfileImageFile.getAbsolutePath());
+
+                try(BufferedOutputStream stream =
+                            new BufferedOutputStream(
+                                    new FileOutputStream(new File(tmpProfileImageFile.getAbsolutePath())))) {
+                    stream.write(bytes);
+                }
+
+                profileImageUrl = this.storeProfileImageToS3(tmpProfileImageFile, username);
+
+                // Clean up the temporary folder
+                tmpProfileImageFile.delete();
             }
-
-            // The temporary file where the profile image will be stored
-            File tmpProfileImageFile = new File(tmpImageStoredFolder.getAbsolutePath()
-                    + File.separatorChar
-                    + PROFILE_PICTURE_FILE_NAME
-                    + "."
-                    + FilenameUtils.getExtension(uploadedFile.getOriginalFilename()));
-
-            LOG.info("Temporary file will be saved to {}", tmpProfileImageFile.getAbsolutePath());
-
-            try(BufferedOutputStream stream =
-                        new BufferedOutputStream(
-                                new FileOutputStream(new File(tmpProfileImageFile.getAbsolutePath())))) {
-                stream.write(bytes);
-            }
-
-            profileImageUrl = this.storeProfileImageToS3(tmpProfileImageFile, username);
-
-            // Clean up the temporary folder
-            tmpProfileImageFile.delete();
+        } catch (IOException e) {
+            LOG.error("Interaction with S3 caused an exception", e);
+            throw new S3Exception(e);
         }
+
 
         return profileImageUrl;
 
@@ -96,6 +104,7 @@ public class S3Service {
      * <p>Please note that the URL does not contain the bucket name</p>
      * @param bucketName The bucket name
      * @return the root URL where the bucket name is located.
+     * @throws S3Exception If an exception occurred while processing S3 activities
      */
     private String ensureBucketExists(String bucketName) {
 
@@ -111,6 +120,7 @@ public class S3Service {
         } catch (AmazonClientException ace) {
             LOG.error("An error occurred while connecting to S3. Will not execute action" +
                     " for bucket: {}", bucketName, ace);
+            throw new S3Exception(ace);
         }
 
 
@@ -122,7 +132,7 @@ public class S3Service {
      * @param resource The file resource to upload to S3
      * @return The URL of the uploaded resource or null if a problem occurred
      *
-     * @throws IllegalArgumentException If the resource file does not exist
+     * @throws S3Exception If an exception occurred while processing S3 activities
      */
     private String storeProfileImageToS3(File resource, String username) {
 
@@ -130,7 +140,7 @@ public class S3Service {
 
         if (!resource.exists()) {
             LOG.error("The file {} does not exist. Throwing an exception", resource.getAbsolutePath());
-            throw new IllegalArgumentException("The file " + resource.getAbsolutePath() + " doesn't exist");
+            throw new S3Exception("The file " + resource.getAbsolutePath() + " doesn't exist");
         }
 
         String rootBucketUrl = this.ensureBucketExists(bucketName);
@@ -153,6 +163,7 @@ public class S3Service {
             } catch (AmazonClientException ace) {
                 LOG.error("A client exception occurred while trying to store the profile" +
                         " image {} on S3. The profile image won't be stored", resource.getAbsolutePath(), ace);
+                throw new S3Exception(ace);
             }
         }
 
