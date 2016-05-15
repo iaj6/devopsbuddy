@@ -128,6 +128,7 @@
 	</dependencies>
 	
 	<build>
+		<finalName>devopsbuddy</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
