@@ -41,7 +41,7 @@ CREATE TABLE `user` (
   CONSTRAINT `fk_plan_users` FOREIGN KEY (`plan_id`) REFERENCES `plan` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+COMMIT;
 --
 -- Table structure for table `role`
 --
@@ -51,7 +51,7 @@ CREATE TABLE `role` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+COMMIT;
 
 
 --
@@ -67,13 +67,7 @@ CREATE TABLE `user_role` (
   CONSTRAINT `fk_userrole_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO plan VALUES ('1', 'Basic');
-INSERT INTO plan VALUES ('2', 'Pro');
-
-INSERT INTO role VALUES (1, 'ROLE_BASIC');
-INSERT INTO role VALUES (2, 'ROLE_PRO');
-INSERT INTO role VALUES (3, 'ROLE_ADMIN');
-
+COMMIT;
 
 --
 -- Table structure for table `password_reset_token`
@@ -87,3 +81,15 @@ CREATE TABLE `password_reset_token` (
   UNIQUE KEY `token_ix_token` (`token`),
   CONSTRAINT `fk_token_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+COMMIT;
+
+
+INSERT INTO plan VALUES ('1', 'Basic');
+INSERT INTO plan VALUES ('2', 'Pro');
+
+INSERT INTO role VALUES (1, 'ROLE_BASIC');
+INSERT INTO role VALUES (2, 'ROLE_PRO');
+INSERT INTO role VALUES (3, 'ROLE_ADMIN');
+
+COMMIT;
