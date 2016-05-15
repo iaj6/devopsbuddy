@@ -14,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.system.ApplicationPidFileWriter;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,7 +43,15 @@ public class DevopsbuddyApplication implements CommandLineRunner {
 	private String webmasterEmail;
 
 	public static void main(String[] args) {
-		SpringApplication.run(DevopsbuddyApplication.class, args);
+		SpringApplication application = new SpringApplication(DevopsbuddyApplication.class);
+		File pidFile = new File(
+				System.getProperty("user.home") +
+						File.separatorChar +
+						"devopsbuddy-tmp" +
+						File.separatorChar +
+						"devopsbuddy.pid");
+		application.addListeners(new ApplicationPidFileWriter(pidFile));
+		application.run(args);
 	}
 
 	@Override
