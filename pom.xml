@@ -79,6 +79,11 @@
 			<artifactId>h2</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+
 		<!-- Hibernate dependencies -->
 		<dependency>
 			<groupId>org.hibernate</groupId>

@@ -51,12 +51,17 @@ public class DevopsbuddyApplication implements CommandLineRunner {
 		planService.createPlan(PlansEnum.BASIC.getId());
 		planService.createPlan(PlansEnum.PRO.getId());
 
-		User user = UserUtils.createBasicUser(webmasterUsername, webmasterEmail);
-		user.setPassword(webmasterPassword);
-		Set<UserRole> userRoles = new HashSet<>();
-		userRoles.add(new UserRole(user, new Role(RolesEnum.ADMIN)));
-		LOG.debug("Creating user with username {}", user.getUsername());
-		userService.createUser(user, PlansEnum.PRO, userRoles);
-		LOG.info("User {} created", user.getUsername());
+		if (userService.findByEmail(webmasterEmail) != null) {
+			LOG.info("User with email: {} already exists", webmasterEmail);
+		} else {
+			User user = UserUtils.createBasicUser(webmasterUsername, webmasterEmail);
+			user.setPassword(webmasterPassword);
+			Set<UserRole> userRoles = new HashSet<>();
+			userRoles.add(new UserRole(user, new Role(RolesEnum.ADMIN)));
+			LOG.debug("Creating user with username {}", user.getUsername());
+			userService.createUser(user, PlansEnum.PRO, userRoles);
+			LOG.info("User {} created", user.getUsername());
+		}
+
 	}
 }
