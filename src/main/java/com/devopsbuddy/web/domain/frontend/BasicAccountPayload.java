@@ -139,8 +139,6 @@ public class BasicAccountPayload implements Serializable {
         final StringBuilder sb = new StringBuilder("BasicAccountPayload{");
         sb.append("email='").append(email).append('\'');
         sb.append(", username='").append(username).append('\'');
-        sb.append(", password='").append(password).append('\'');
-        sb.append(", confirmPassword='").append(confirmPassword).append('\'');
         sb.append(", firstName='").append(firstName).append('\'');
         sb.append(", lastName='").append(lastName).append('\'');
         sb.append(", description='").append(description).append('\'');
