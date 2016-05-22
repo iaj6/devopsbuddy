@@ -24,7 +24,7 @@ CREATE TABLE `user` (
   `username` varchar(50) NOT NULL,
   `password` varchar(60) NOT NULL,
   `enabled` tinyint(1) NOT NULL,
-  `email` varchar(256) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `phone_number` varchar(50) DEFAULT NULL,

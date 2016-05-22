@@ -1,0 +1,55 @@
+1) Create IAM role with full: 
+
+	- S3
+	- EC2
+	- RDS
+
+2) Create an Elastic IP for the NAT Gateway
+
+3) Create a VPC with public and private subnet
+
+4) Create security group for Bastion Host, Spring Boot and Public access
+
+5) Set security group for Spring Boot to allow incoming traffic on port 22 from Bastion Host and all HTTP on port 8080 from public security group
+
+6) Launch bastion host on public subnet
+
+7) Launch spring boot on private subnet
+
+8) Check if you can connect from bastion host to spring boot
+
+9) Check if you can connect from Spring boot to AWS s3
+
+10) Create S3 bucket <user>-devopsbuddy-config and attach the following policy:
+
+(Restricts access only to a VPC)
+
+{
+	"Version": "2012-10-17",
+	"Id": "Policy1415115909153",
+	"Statement": [
+		{
+			"Sid": "Access-to-specific-VPC-only",
+			"Action": "s3:*",
+			"Effect": "Deny",
+			"Resource": [
+				"arn:aws:s3:::marcotedone-devopsbuddy-config",
+				"arn:aws:s3:::marcotedone-devopsbuddy-config/*"
+			],
+			"Condition": {
+				"StringNotEquals": {
+					"aws:sourceVpc": "vpc-ea06fd8e"
+				}
+			},
+			"Principal": "*"
+		}
+	]
+}
+
+11) Sync local .devopsbuddy folder with s3://user-devopsbuddy-config
+
+12) On Spring Boot server create .devopsbuddy folder and sync from s3
+
+13) Deploy Spring Boot app to Spring boot server, by pushing it to bastion host and then to Spring boot app from there
+
+14) Configure AWS with user’s credentials 
