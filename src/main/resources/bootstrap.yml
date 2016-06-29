@@ -1,0 +1,9 @@
+---
+spring:
+  cloud:
+    config:
+      uri: http://devopsbuddy-scs-config-server.local.pcfdev.io
+  application:
+    name: devopsbuddy
+  profiles:
+    active: dev,common,stripe

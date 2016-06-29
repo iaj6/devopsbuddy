@@ -1,0 +1,7 @@
+---
+applications:
+- name: devopsbuddy
+  memory: 512M
+  host: devopsbuddy
+  buildpack: java_buildpack
+  path: ./target/devopsbuddy.jar
