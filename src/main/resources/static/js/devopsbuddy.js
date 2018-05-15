@@ -237,12 +237,18 @@ function main() {
                             message: 'The CVV number is not valid'
                         }
                     }
+                },
+                quantity: {
+                    validators: {
+                        notEmpty: {
+                            message: 'A monthly donation is required'
+                        },
+                        dollar: {
+                            message: 'Not a valid dollar amount'
+                        }
+                    }
                 }
             }
-        })
-        // Revalidate phone number when changing the country
-        .on('change', '[name="country"]', function(e) {
-            $('#signupForm').formValidation('revalidateField', 'phoneNumber');
         });
 
 }

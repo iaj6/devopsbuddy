@@ -180,7 +180,9 @@ public class    SignupController {
             Map<String, Object> customerParams = new HashMap<String, Object>();
             customerParams.put("description", "DevOps Buddy customer. Username: " + payload.getUsername());
             customerParams.put("email", payload.getEmail());
-            customerParams.put("plan", selectedPlan.getId());
+            customerParams.put("plan", selectedPlan.getStripeID());
+            LOG.info("quantity is: " + payload.getQuantity());
+            customerParams.put("quantity", getQuantityAmount(payload.getQuantity()));
             LOG.info("Subscribing the customer to plan {}", selectedPlan.getName());
             String stripeCustomerId = stripeService.createCustomer(stripeTokenParams, customerParams);
             LOG.info("Username: {} has been subscribed to Stripe", payload.getUsername());
@@ -219,6 +221,17 @@ public class    SignupController {
 
 
     //--------------> Private methods
+
+    /**
+     * Converts string value of dollars to a double, then multiply by 100 to get cents
+     * finally convert that to a double to send to Stripe.
+     * @param quantity String dollar value user is donating per month.
+     * @return int value of total quantity.
+     */
+    private int getQuantityAmount(String quantity) {
+        Double totalQuantity = (Double.valueOf(quantity) * 100);
+        return totalQuantity.intValue();
+    }
 
     /**
      * Checks if the username/email are duplicates and sets error flags in the model.

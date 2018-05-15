@@ -23,6 +23,9 @@ public class ContactController {
     /** The key which identifies the feedback payload in the Model. */
     public static final String FEEDBACK_MODEL_KEY = "feedback";
 
+    /** The key which stores where or not the message sent. **/
+    public static final String FEEDBACK_SUCCESS_KEY = "feedbackSuccess";
+
     /** The Contact Us view name. */
     private static final String CONTACT_US_VIEW_NAME = "contact/contact";
 
@@ -37,9 +40,12 @@ public class ContactController {
     }
 
     @RequestMapping(value = "/contact", method = RequestMethod.POST)
-    public String contactPost(@ModelAttribute(FEEDBACK_MODEL_KEY) FeedbackPojo feedback) {
+    public String contactPost(@ModelAttribute(FEEDBACK_MODEL_KEY) FeedbackPojo feedback,
+                              ModelMap modelMap) {
         LOG.debug("Feedback POJO content: {}", feedback);
         emailService.sendFeedbackEmail(feedback);
+        //if we made it this far then the message sent.
+        modelMap.addAttribute(FEEDBACK_SUCCESS_KEY, true);
         return ContactController.CONTACT_US_VIEW_NAME;
     }
 }

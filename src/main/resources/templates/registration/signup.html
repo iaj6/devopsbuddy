@@ -176,6 +176,10 @@
                                 <option value="2030">2030</option>
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="quantity" id="quantity" th:text="#{signup.form.quantity}"></label>
+                            <input type="text" th:field="*{quantity}" class="form-control"/>
+                        </div>
                     </div>
 
                     <button type="submit" class="btn btn-primary" th:text="#{form.submit}"></button>

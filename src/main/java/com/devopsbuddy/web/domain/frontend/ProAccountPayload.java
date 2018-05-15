@@ -11,6 +11,7 @@ public class ProAccountPayload extends BasicAccountPayload {
     private String cardCode;
     private String cardMonth;
     private String cardYear;
+    private String quantity;
 
     public String getCardNumber() {
         return cardNumber;
@@ -42,5 +43,13 @@ public class ProAccountPayload extends BasicAccountPayload {
 
     public void setCardYear(String cardYear) {
         this.cardYear = cardYear;
+    }
+
+    public String getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        this.quantity = quantity;
     }
 }

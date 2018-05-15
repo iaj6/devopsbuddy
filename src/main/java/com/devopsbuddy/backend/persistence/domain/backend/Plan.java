@@ -2,6 +2,7 @@ package com.devopsbuddy.backend.persistence.domain.backend;
 
 import com.devopsbuddy.enums.PlansEnum;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -19,6 +20,10 @@ public class Plan implements Serializable {
     private int id;
 
     private String name;
+
+
+    @Column(name = "stripe_id")
+    private String stripeID;
 
     /** Default constructor. */
     public Plan() {
@@ -45,6 +50,16 @@ public class Plan implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+
+    public String getStripeID() {
+        return stripeID;
+    }
+
+    public void setStripeID(String stripeID) {
+        this.stripeID = stripeID;
+    }
+
 
     @Override
     public boolean equals(Object o) {

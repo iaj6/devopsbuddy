@@ -31,7 +31,7 @@ public class ApplicationConfig {
     public AmazonS3Client s3Client() {
         AWSCredentials credentials = new ProfileCredentialsProvider(awsProfileName).getCredentials();
         AmazonS3Client s3Client = new AmazonS3Client(credentials);
-        Region region = Region.getRegion(Regions.EU_WEST_1);
+        Region region = Region.getRegion(Regions.US_EAST_1);
         s3Client.setRegion(region);
         return s3Client;
     }
